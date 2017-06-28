@@ -31,7 +31,7 @@ print(__doc__)
 # is included in Spectrum package which is in turn imported in iqbase. So we only import tiqdata
 
 import argparse
-from tiqdata import *
+from iqtools import *
 from rootpy.plotting import Hist, Canvas, Legend
 from rootpy.interactive import wait
 import numpy as np
