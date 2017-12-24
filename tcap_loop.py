@@ -41,9 +41,8 @@ def process(hdr_fiename, filename):
         data_fft = np.average(data_fft, axis=0)
         data_fft = np.abs(np.fft.fftshift(data_fft))
         zz = np.append(zz, data_fft)
-    print(np.shape(zz))
+
     zz = np.reshape(zz, (780, 32768 * 2))
-    print(np.shape(zz))
     data_fft_freqs = np.fft.fftshift(
         np.fft.fftfreq(32768 * 2, d=1 / fs))  # in Hz
     xx, yy = np.meshgrid(data_fft_freqs, np.arange(780))
