@@ -58,7 +58,7 @@ def main():
     for arg in sys.argv[2:]:
         print('Processing file: ' + arg)
         print('Using header: ' + hdr)
-        print('Running on GPU...')
+        print('Running on CPU...')
         process(hdr, arg)
 
 # ------------------------
