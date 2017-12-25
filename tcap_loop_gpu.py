@@ -16,8 +16,16 @@ matplotlib.use('Agg')
 from iqtools import *
 from iqtools import TCAPData
 
+from reikna.fft import FFT
+import numpy
+import reikna.cluda as cluda
+
 
 def process(hdr_fiename, filename):
+    api = cluda.cuda_api()
+    thr = api.Thread.create()
+    X = thr.array((10, 32768 * 2), dtype=numpy.complex128)
+
     iq_data = TCAPData(filename, hdr_fiename)
     file_counter = int(iq_data.filename_wo_ext[-3:])
     fs = 312500
@@ -37,7 +45,14 @@ def process(hdr_fiename, filename):
         for i in range(j, j + 2 * 10):
             data = np.append(data, iq_data.read_block(i))
         data = np.reshape(data, (10, 32768 * 2))
-        data_fft = np.fft.fft(data, axis=1)
+
+        x = thr.to_device(data)
+        fft = FFT(x, axes=(1,))
+        fftc = fft.compile(thr)
+        fftc(X, x, 0)
+        data_fft = X
+        #data_fft = np.fft.fft(data, axis=1)
+
         data_fft = np.average(data_fft, axis=0)
         data_fft = np.abs(np.fft.fftshift(data_fft))
         zz = np.append(zz, data_fft)
@@ -58,6 +73,7 @@ def main():
     for arg in sys.argv[2:]:
         print('Processing file: ' + arg)
         print('Using header: ' + hdr)
+        print('Running on GPU...')
         process(hdr, arg)
 
 # ------------------------
