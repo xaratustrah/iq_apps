@@ -8,14 +8,14 @@ Process and create TDMS spectrogram in a loop from several files
 
 """
 
+from matplotlib.colors import LogNorm
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import iqtools
+import numpy as np
+import sys
 import matplotlib
 matplotlib.use('Agg')  # import before all others
-import sys
-import numpy as np
-import iqtools
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from matplotlib.colors import LogNorm
 
 lframes = 2**21  # samples
 zoom_window = 10000  # bins

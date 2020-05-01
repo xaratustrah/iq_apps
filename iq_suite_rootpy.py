@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Using iq_suite together with rootpy (based on CERN ROOT Package)
+Using iqtools together with rootpy (based on CERN ROOT Package)
 
 type:
     source `which thisroot.sh`
@@ -25,16 +25,15 @@ Latest ndawe/rootpy from GitHUB
 
 """
 
+import numpy as np
+from rootpy.interactive import wait
+from rootpy.plotting import Hist, Canvas, Legend
+from iqtools import *
+import argparse
 print(__doc__)
 
 # note that currently matplotlib import freezes the output of rootpy. matplotlib import
 # is included in Spectrum package which is in turn imported in iqbase. So we only import tiqdata
-
-import argparse
-from iqtools import *
-from rootpy.plotting import Hist, Canvas, Legend
-from rootpy.interactive import wait
-import numpy as np
 
 
 def do_stuff(file_name, plot=True):
