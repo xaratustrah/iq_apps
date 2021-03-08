@@ -17,6 +17,7 @@ from iqtools import *
 
 def find_power(iq_object, file_offset):
     # read one second worth of data at the offset go through the file
+    # TODO: here is the problem
     iq_object.read_samples(
         int(iq_object.fs), offset=file_offset)
 
