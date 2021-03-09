@@ -24,20 +24,21 @@ def find_power(iq_object, file_offset):
                    lframes=int(iq_object.fs), sframes=file_offset)
 
     window = 50000  # Hz
-    # lf = 2048
-    # nf = int(len(iq_object.data_array) / lf)
-    # ff, pp, _ = iq_object.get_fft(
-    #     x=iq_object.data_array[0:nf * lf], nframes=nf, lframes=lf)
-
+    # window = 400000  # Hz
     ff, pp, _ = iq_object.get_fft()
-    # plt.figure()
-    # plot_spectrum(ff, pp)
-    # plt.plot(ff[pp.argmax() - window], pp[pp.argmax() - window], 'r|')
-    # plt.plot(ff[pp.argmax() + window], pp[pp.argmax() + window], 'r|')
-    # plt.plot(ff[pp.argmax()], pp[pp.argmax()], 'rv')
-    # plt.savefig('plot_{}'.format(file_offset))
-    # plt.close()
     return pp[pp.argmax() - window:pp.argmax() + window].sum()
+    #center = ff.size // 2
+    # return pp[center - window:center + window].sum()
+
+
+def get_datetime_object(iq):
+    if isinstance(iq, tiqdata.TIQData):
+        return datetime.datetime.strptime(
+            iq.date_time[:-9], '%Y-%m-%dT%H:%M:%S.%f')
+
+    elif isinstance(iq, iqtdata.IQTData):
+        return datetime.datetime.strptime(
+            iq.date_time, '%Y/%m/%d@%H:%M:%S')
 
 
 def main():
@@ -48,13 +49,10 @@ def main():
     first_ilename = sys.argv[1]
     print('Processing first file: ' + first_ilename)
     iq = get_iq_object(first_ilename)
-    iq.read_samples(1)
+    iq.read()
 
-    # Datetime is of the kind:
-    # 2021 - 02 - 26T23: 22: 13.719023510 - 08: 00
+    dt_first_file = get_datetime_object(iq)
 
-    dt_first_file = datetime.datetime.strptime(
-        iq.date_time[:-9], '%Y-%m-%dT%H:%M:%S.%f')
     ts_first_file = round(dt_first_file.timestamp())
     print('Time stamp of the first file:', ts_first_file)
     # make the total length round to one second
@@ -73,13 +71,10 @@ def main():
         for filename in sys.argv[2:]:
             print('Processing file: ' + filename)
             iq = get_iq_object(filename)
-            iq.read_samples(1)
+            iq.read()
 
-            # Datetime is of the kind:
-            # 2021 - 02 - 26T23: 22: 13.719023510 - 08: 00
-
-            dt_current_file = datetime.datetime.strptime(
-                iq.date_time[:-9], '%Y-%m-%dT%H:%M:%S.%f')
+            # get the datetime object
+            dt_current_file = get_datetime_object(iq)
 
             # make the total length round to one second
             length_total = int(iq.nsamples_total / iq.fs)
