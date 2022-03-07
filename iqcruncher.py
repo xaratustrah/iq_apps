@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-crunches large TDMS Files
+crunches large number of huge IQ Files
 
 xaratustrah 2022
 
@@ -20,15 +20,15 @@ ZZMAX = 20000
 
 
 def convert_to_raw(iq_obj, outfilename):
-    #iq_obj.read_samples(LFRAMES * NFRAMES)
-    iq_obj.read_complete_file()
+    iq_obj.read_samples(LFRAMES * NFRAMES)
+    # iq_obj.read_complete_file()
     write_signal_to_bin(iq_obj.data_array, outfilename,
                         fs=0, center=0, write_header=False)
 
 
 def make_spectra(iq_obj, outfilename):
     xx, yy, zz = iq_obj.get_spectrogram(lframes=LFRAMES, nframes=NFRAMES)
-    xx, yy, zz = iq_obj.get_averaged_spectrogram(xx, yy, zz, every=AVG)
+    xx, yy, zz = get_averaged_spectrogram(xx, yy, zz, every=AVG)
     plot_spectrogram(xx, yy, zz, filename=outfilename, zzmax=ZZMAX)
 
 
