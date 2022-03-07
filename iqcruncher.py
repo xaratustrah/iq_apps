@@ -20,8 +20,8 @@ ZZMAX = 20000
 
 
 def convert_to_raw(iq_obj, outfilename):
-    iq_obj.read_samples(LFRAMES * NFRAMES)
-    # iq_obj.read_complete_file()
+    #iq_obj.read_samples(LFRAMES * NFRAMES)
+    iq_obj.read_complete_file()
     write_signal_to_bin(iq_obj.data_array, outfilename,
                         fs=0, center=0, write_header=False)
 
