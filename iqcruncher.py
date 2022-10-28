@@ -81,7 +81,7 @@ def main():
         
         # get file counter from file name
         filecounter = int(Path(file).stem.split('.')[0])
-        title = datetime.strftime(datetime.strptime(args.parent, 'IQ_%Y-%m-%d_%H-%M-%S') + timedelta(seconds=args.delta), '%Y-%m-%d_%H-%M-%S')
+        title = datetime.strftime(datetime.strptime(args.parent, 'IQ_%Y-%m-%d_%H-%M-%S') + timedelta(seconds=args.delta * filecounter), '%Y-%m-%d_%H-%M-%S')
         
         iq_obj.read_complete_file()
         #iq_obj.read_samples(LFRAMES * NFRAMES)
