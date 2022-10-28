@@ -9,6 +9,8 @@ xaratustrah 2022
 import argparse
 import sys
 import os
+from datetime import datetime, timedelta
+from pathlib import Path
 from iqtools import *
 from ROOT import TCanvas, TFile
 
@@ -36,7 +38,7 @@ def make_spectra(iq_obj, outfilename):
     return xx, yy, zz
 
 
-def save_as_root(xx, yy, zz, filename):
+def save_as_root(xx, yy, zz, filename, title):
     h3 = get_root_th2d(xx, yy, zz)
     c = TCanvas('', '', 800, 600)
     c.Divide(1, 2)
@@ -51,8 +53,8 @@ def save_as_root(xx, yy, zz, filename):
     ff.Close()
 
 
-def save_as_png(xx, yy, zz, filename):
-    plot_spectrogram(xx, yy, zz, filename=filename, title='')
+def save_as_png(xx, yy, zz, filename, title):
+    plot_spectrogram(xx, yy, zz, filename=filename, title=title)
 
 
 def main():
@@ -61,6 +63,10 @@ def main():
                         help='Name of the input files.')
     parser.add_argument('-o', '--outdir', type=str, default='.',
                         help='output directory.')
+    parser.add_argument('-p', '--parent', type=str, default='',
+                        help='Parent Directory Name, where usually time stamp is, e.g. IQ_2022-05-16_20-49-47')
+    parser.add_argument('-d', '--delta', type=int, default=0,
+                        help='Delta T between files in seconds')
 
     args = parser.parse_args()
 
@@ -72,7 +78,11 @@ def main():
         # create object
         iq_obj = get_iq_object(file)
         outfilename = outfilepath + iq_obj.file_basename
-
+        
+        # get file counter from file name
+        filecounter = int(Path(file).stem.split('.')[0])
+        title = datetime.strftime(datetime.strptime(args.parent, 'IQ_%Y-%m-%d_%H-%M-%S') + timedelta(seconds=args.delta), '%Y-%m-%d_%H-%M-%S')
+        
         iq_obj.read_complete_file()
         #iq_obj.read_samples(LFRAMES * NFRAMES)
 
@@ -80,9 +90,9 @@ def main():
 
         xx, yy, zz = make_spectra(iq_obj, outfilename)
 
-        save_as_png(xx, yy, zz, outfilename)
+        save_as_png(xx, yy, zz, outfilename, title)
 
-        save_as_root(xx, yy, zz, outfilename)
+        save_as_root(xx, yy, zz, outfilename, title)
 
     # ----------------------------------------
 
