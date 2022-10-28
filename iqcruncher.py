@@ -92,7 +92,7 @@ def main():
 
         save_as_png(xx, yy, zz, outfilename, title)
 
-        save_as_root(xx, yy, zz, outfilename, title)
+        #save_as_root(xx, yy, zz, outfilename, title)
 
     # ----------------------------------------
 
