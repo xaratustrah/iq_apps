@@ -9,6 +9,7 @@ xaratustrah 2022
 import argparse
 import sys
 import os
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from iqtools import *
@@ -57,6 +58,12 @@ def save_as_png(xx, yy, zz, filename, title):
     plot_spectrogram(xx, yy, zz, filename=filename, title=title)
 
 
+def fake_process(filename):
+    print('Sleeping for 30 secs...')
+    time.sleep(30)
+    with open(filename+'.txt') as f:
+        f.write(filename)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='+', type=str,
@@ -67,6 +74,7 @@ def main():
                         help='Parent Directory Name, where usually time stamp is, e.g. IQ_2022-05-16_20-49-47')
     parser.add_argument('-d', '--delta', type=int, default=0,
                         help='Delta T between files in seconds')
+    parser.add_argument('--fake', action='store_true')
 
     args = parser.parse_args()
 
@@ -90,9 +98,13 @@ def main():
 
         xx, yy, zz = make_spectra(iq_obj, outfilename)
 
+        if args.fake:
+            fake_process(outfilename)
+            sys.exit()
+        
         save_as_png(xx, yy, zz, outfilename, title)
-
         #save_as_root(xx, yy, zz, outfilename, title)
+            
 
     # ----------------------------------------
 
