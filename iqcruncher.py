@@ -58,7 +58,7 @@ def save_as_png(xx, yy, zz, filename, title):
     plot_spectrogram(xx, yy, zz, filename=filename, title=title)
 
 
-def fake_process(filename):
+def fake_process(filename, title):
     print('Sleeping for 30 secs...')
     time.sleep(30)
     with open(filename+'.txt', 'a') as f:
