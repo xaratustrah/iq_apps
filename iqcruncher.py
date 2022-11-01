@@ -61,8 +61,8 @@ def save_as_png(xx, yy, zz, filename, title):
 def fake_process(filename):
     print('Sleeping for 30 secs...')
     time.sleep(30)
-    with open(filename+'.txt') as f:
-        f.write(filename)
+    with open(filename+'.txt', 'a') as f:
+        f.write(filename + ' ' + title)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -99,7 +99,7 @@ def main():
         xx, yy, zz = make_spectra(iq_obj, outfilename)
 
         if args.fake:
-            fake_process(outfilename)
+            fake_process(outfilename, title)
             sys.exit()
         
         save_as_png(xx, yy, zz, outfilename, title)
